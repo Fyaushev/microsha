@@ -238,7 +238,6 @@ void my_in (vector <string>  s, string file){
 void my_pipeline (vector <vector <string> > &arg){
 	int i; 
 	int count = arg.size();
-	//close(2);
 	for(i = 0; i < count - 1; i++){
 		int fd[2];
 		pipe(fd);
@@ -320,10 +319,7 @@ void metacharacters(string pattern, string dir, vector <string> *arg){
 					if(pattern[0]=='/') tmp = dir  + '/' + (string)de->d_name;
 					else tmp = (string)de->d_name;
 					struct stat st;
-					if(stat(tmp.c_str(), &st)<0){
-						//perror(tmp.c_str());
-						return;
-					}
+					if(stat(tmp.c_str(), &st)<0) return;
 					if(S_ISDIR(st.st_mode)) {
 						placeholder.push_back(string(de->d_name));
 					}
@@ -335,7 +331,7 @@ void metacharacters(string pattern, string dir, vector <string> *arg){
 				for(vector <string>::iterator it = placeholder.begin(); it!=placeholder.end(); it++){
 					if(pattern[0]=='/') tmp = dir  + '/' + *it;
 					else tmp = *it;
-					if(buf2.size() > 1)	metacharacters(buf2, tmp, arg);
+					if(buf2.size() > 1) metacharacters(buf2, tmp, arg);
 					else arg->push_back(tmp);
 				}
 			}
@@ -358,7 +354,6 @@ void metacharacters(string pattern, string dir, vector <string> *arg){
 			if(d == NULL) return;
 
 			for( dirent *de = readdir(d); de != NULL; de = readdir(d)){
-				
 				if(string(de->d_name) == "." || string(de->d_name) == ".." || de->d_name[0] == '.') continue;
 				if(!fnmatch(buf1.c_str(), de->d_name, 0)){
 					placeholder.push_back(string(de->d_name));	
@@ -458,10 +453,9 @@ int main(){
 		if(s == "leave") exit(0);
 		string command = "";
 		first_command(s, &command);
-		if(command.size() &&  command == "cd"){
+		if(command == "cd"){
 			vector <string> argv;
 			if(pars(s, &argv) != 1) my_cd(argv);
-			if(argv.size()) argv.clear();
 		}
 		else {
 			pid_t pid = fork();
@@ -482,7 +476,6 @@ int main(){
 							pars_pipeline(argv);
 							break;
 				}
-				if(argv.size()) argv.clear();
 				exit(0);
 			}
 			int st;
@@ -506,12 +499,3 @@ int main(){
 	}	
 	return 0;
 }
-
-
-
-
-
-
-
-
-

@@ -51,7 +51,6 @@ int shell_prompt_show(){
 	}
 	if(i==1) newbuf = "/";
 	printf("[%s]", newbuf.c_str());
-	//printf("[%s]", buf);
 	uid_t uid=getuid();
 	if(uid == 0){
 		printf("! ");
@@ -436,7 +435,6 @@ void pars_argv(vector <string> s){
 	exit(status);
 	}
 }
-
 
 int main(){
 	if(chdir(getenv("HOME")) == -1) perror("chdir");

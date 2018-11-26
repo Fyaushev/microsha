@@ -24,14 +24,6 @@ void metacharacters(string pattern, string dir, vector <string> *arg);
 void my_pwd();
 void pars_argv(vector <string> s);
 
-void show_vector_string( vector <string> s)
-{
-	for (vector<string>::iterator it = s.begin() ; it!=s.end() ; ++it){
-		cout<<*it<< endl;
-	}
-	return;
-}
-
 int shell_prompt_show(){
 	char buf[MAXPATHLEN + 1] = {0};
 	
@@ -82,7 +74,8 @@ int first_command(string s, string *buf){
 		++i;
 	}
 	return 0;
-}	
+}
+
 int pars(string s, vector <string> *str){
 	vector <string> placeholder;
 	string buf;
@@ -335,7 +328,7 @@ void metacharacters(string pattern, string dir, vector <string> *arg){
 				}
 			}
 		}
-	}else{
+	} else {
 		string tmp = "";
 		if(pattern[0]=='/'){
 			if(dir.empty()) tmp = '/';
@@ -365,7 +358,7 @@ void metacharacters(string pattern, string dir, vector <string> *arg){
 						string tmp = dir + '/' + *it;
 						arg->push_back(tmp);
 					}
-				}else{
+				} else {
 					for(vector <string>::iterator it = placeholder.begin(); it!=placeholder.end(); it++){
 						string tmp = *it;
 						arg->push_back(tmp);
@@ -454,8 +447,7 @@ int main(){
 		if(command == "cd"){
 			vector <string> argv;
 			if(pars(s, &argv) != 1) my_cd(argv);
-		}
-		else {
+		} else {
 			pid_t pid = fork();
 			if(pid == 0){
 				signal(SIGINT, SIG_DFL);

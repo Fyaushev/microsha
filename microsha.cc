@@ -392,6 +392,10 @@ void pars_argv(vector <string> s){
 	vector <string> placeholder;
 	int flag = 0;
 	for (vector<string>::iterator it = s.begin(); it!=s.end(); it++){
+		if(flag){
+			fprintf(stderr,"microsha: more then one file\n");
+			return;
+		}
 		if (*it == "\n") break;
 		if(*it == ">"){
 			flag = 1;
@@ -415,10 +419,6 @@ void pars_argv(vector <string> s){
 				fprintf(stderr,"microsha: syntax error near < \n");
 				return;
 			}
-		}
-		if(flag){
-			fprintf(stderr,"microsha: more then one file\n");
-			return;
 		}
 		placeholder.push_back(*it);
 	}		

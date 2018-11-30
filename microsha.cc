@@ -74,8 +74,7 @@ int first_command(string s, string *buf){
 		++i;
 	}
 	return 0;
-}
-
+}	
 int pars(string s, vector <string> *str){
 	vector <string> placeholder;
 	string buf;
@@ -328,7 +327,7 @@ void metacharacters(string pattern, string dir, vector <string> *arg){
 				}
 			}
 		}
-	} else {
+	}else{
 		string tmp = "";
 		if(pattern[0]=='/'){
 			if(dir.empty()) tmp = '/';
@@ -358,7 +357,7 @@ void metacharacters(string pattern, string dir, vector <string> *arg){
 						string tmp = dir + '/' + *it;
 						arg->push_back(tmp);
 					}
-				} else {
+				}else{
 					for(vector <string>::iterator it = placeholder.begin(); it!=placeholder.end(); it++){
 						string tmp = *it;
 						arg->push_back(tmp);
@@ -391,42 +390,50 @@ void pars_pipeline(vector <string> s){
 
 void pars_argv(vector <string> s){
 	vector <string> placeholder;
+	int flag = 0;
 	for (vector<string>::iterator it = s.begin(); it!=s.end(); it++){
 		if (*it == "\n") break;
 		if(*it == ">"){
+			flag = 1;
 			if(it!=(s.end() - 1)){
 				it++;
 				my_out(placeholder, (*it));
 				placeholder.clear();
 				continue;
 			} else {
-				printf("microsha: syntax error near > \n");
+				fprintf(stderr,"microsha: syntax error near > \n");
 				return;
 			}
 		} else if(*it == "<"){
+			flag = 1;
 			if(it!=(s.end() - 1)){
 				it++;
 				my_in(placeholder, (*it));
 				placeholder.clear();
 				continue;
 			} else {
-				printf("microsha: syntax error near < \n");
+				fprintf(stderr,"microsha: syntax error near < \n");
 				return;
 			}
+		}
+		if(flag){
+			fprintf(stderr,"microsha: more then one file\n");
+			return;
 		}
 		placeholder.push_back(*it);
 	}		
 	if(!placeholder.empty()){
-	vector <char *> argv;
-	for(vector<string>::iterator it = placeholder.begin() ; it!=placeholder.end() ; ++it){
-		argv.push_back((char *)(*it).c_str());
+		vector <char *> argv;
+		for(vector<string>::iterator it = placeholder.begin() ; it!=placeholder.end() ; ++it){
+			argv.push_back((char *)(*it).c_str());
+		}
+		argv.push_back(NULL);
+		execvp(argv[0], &argv[0]);
+		fprintf(stderr, "microsha: %s: command not found\n", argv[0]);
+		int status;
+		exit(status);
 	}
-	argv.push_back(NULL);
-	execvp(argv[0], &argv[0]);
-	fprintf(stderr, "microsha: %s: command not found\n", argv[0]);
-	int status;
-	exit(status);
-	}
+	return;
 }
 
 int main(){
@@ -447,7 +454,8 @@ int main(){
 		if(command == "cd"){
 			vector <string> argv;
 			if(pars(s, &argv) != 1) my_cd(argv);
-		} else {
+		}
+		else {
 			pid_t pid = fork();
 			if(pid == 0){
 				signal(SIGINT, SIG_DFL);

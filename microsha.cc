@@ -434,11 +434,13 @@ void execute_command(vector <string> s){
 				return;
 			}
 		}
-		if(flag){
+		if(flag) {
 			fprintf(stderr,"microsha: more then one file\n");
 			return;
 		}
 		placeholder.push_back(*it);
+		
+		
 	}
 	
 	if(!placeholder.empty()){

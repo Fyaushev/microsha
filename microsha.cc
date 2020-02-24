@@ -383,8 +383,8 @@ void pars_pipeline(vector <string> s){
 	return;
 }
 
-//parses commad's arguments and then execute the command
-//also performs input/output redirection
+// parses commad's arguments and then execute the command
+// also performs input/output redirection
 void execute_command(vector <string> s){
 	vector <string> placeholder;
 	int flag = 0;//check the number of files after "<", ">"
